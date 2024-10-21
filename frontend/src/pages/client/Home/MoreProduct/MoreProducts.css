@@ -1,0 +1,119 @@
+.bao-subheadline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.bao-subheadline-deco-line {
+    width: 2rem;
+    height: 2px;
+    background-color: #ccc;
+}
+
+.bao-subheadline-label {
+    text-transform: uppercase;
+    margin: 0 1rem;
+    letter-spacing: 0.15em;
+    font-weight: 500;
+    font-size: 14px;
+    color: #555;
+}
+
+.bao-product-cart {
+    text-align: center;
+}
+
+.product-image {
+    height: 300px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+}
+
+.product-overlay {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.product-image:hover .product-overlay {
+    opacity: 1;
+}
+
+.explore-button {
+    display: none;
+    width: 90%;
+    margin-bottom: 1rem;
+}
+
+.product-image:hover .explore-button {
+    display: block;
+}
+
+.on-sale-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #fff;
+    color: #d2691e;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    border-radius: 4px;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    transition: box-shadow 0.3s;
+    text-decoration: none;
+}
+
+.product-info:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s;
+}
+
+.product-title:hover {
+    color: #d2691e;
+}
+
+
+.bao-price {
+    font-size: 1rem;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-price {
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+}
+
+.original-price {
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+    text-decoration: line-through;
+    font-weight: 700;
+    color: #e91717;
+}

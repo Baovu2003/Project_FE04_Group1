@@ -1,0 +1,66 @@
+.slider {
+    height: 530px;
+    background-image: url("/src/assets/Slider_bg.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  
+  .overlay {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(55, 65, 81, 0.7); /* gray with opacity */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .slider-content {
+    color: white;
+    text-align: center;
+    max-width: 600px;
+    padding: 0 16px;
+  }
+  
+  .subtitle {
+    text-transform: uppercase;
+    font-size: 14px;
+    margin-bottom: 24px;
+    font-weight: bold;
+  }
+  
+  .title {
+    font-size: 3rem; /* Equivalent to text-5xl */
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+  
+  .description {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .bao-button {
+    background-color: white;
+    color: #1f2937; /* dark gray */
+    padding: 8px 24px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .bao-button:hover {
+    background-color: #e5e7eb;
+  }

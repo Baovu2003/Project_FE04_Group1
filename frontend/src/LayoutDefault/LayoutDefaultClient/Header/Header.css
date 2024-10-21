@@ -1,0 +1,180 @@
+/* Header.css */
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+    background-color: #ffffff;
+    background: rgb(235, 201, 235);
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand img {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+.navbar-toggler {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 10px 10px;
+}
+
+.navbar-menu {
+    display: flex;
+}
+
+/* Navbar links styles */
+.navbar-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 50px;
+}
+
+.navbar-links .active {
+    color: green;
+    font-weight: bold;
+}
+
+
+.navbar-links li {
+    font-size: 1.3rem;
+}
+
+.navbar-links a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.navbar-links li {
+    position: relative;
+}
+
+.navbar-links a {
+    /* padding: 0.25rem 0; */
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s;
+}
+
+.navbar-links a:hover {
+    color: green;
+    font-weight: bold;
+}
+
+.navbar-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: #d9c99c;
+    height: 0.125rem;
+    width: 0;
+    transition: width 0.3s ease-in-out;
+}
+
+.navbar-links a:hover::after {
+    width: 100%;
+}
+
+.navbar-cart {
+    display: flex;
+    font-size: 1.3em;
+    gap: 10px;
+}
+
+.navbar-cart a:last-child {
+    margin-top: 3px;
+}
+
+@media (max-width: 768px) {
+    .navbar-brand img {
+        width: 50px;
+        margin-top: 20px;
+    }
+
+    .navbar-toggler {
+        display: block;
+        margin-top: 20px;
+    }
+
+    .navbar-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background: white;
+        width: 100%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-menu.open {
+        display: flex;
+    }
+
+    .navbar-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .navbar-links li {
+        font-size: 1rem;
+    }
+
+    .navbar-cart a {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 10px;
+    }
+
+    .navbar-cart .auth-btn {
+        padding: 5px 10px;
+        font-size: 0.4rem;
+    }
+
+    .navbar-cart a:last-child {
+        font-size: 0.4rem;
+    }
+}
+
+
+@media (max-width: 1040px) {
+    .navbar-links {
+        gap: 10px;
+    }
+
+    .navbar-links li {
+        font-size: 0.9rem;
+        margin-top: 10px;
+        gap: 0px;
+    }
+
+    .navbar-cart a {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 10px;
+    }
+
+    .navbar-cart .auth-btn {
+        padding: 5px 10px;
+        font-size: 0.9rem;
+    }
+
+    .navbar-cart a:last-child {
+        font-size: 1.2rem;
+        padding-top: 8px;
+    }
+}

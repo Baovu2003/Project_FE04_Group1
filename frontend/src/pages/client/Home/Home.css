@@ -1,0 +1,21 @@
+
+
+  
+  .full-width-section {
+  height: 400px;
+  background-image: url('../../../assets/Section-Image.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-bottom: 6rem;
+  background-attachment: fixed;
+  width: 100vw;
+  position: relative;
+  left: calc(-50vw + 50%);
+}
+
+@media (min-width: 768px) {
+  .full-width-section {
+    height: 500px;
+  }
+}

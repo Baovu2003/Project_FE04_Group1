@@ -1,0 +1,50 @@
+.header {
+    background-color: #343a40; 
+    color: white; 
+    padding: 15px 20px; 
+  }
+  
+  .inner-logo {
+    font-size: 24px; 
+    font-weight: bold;
+    color: #ffffff; 
+    text-decoration: none; 
+  }
+  
+  .inner-logo a {
+    color: #ffffff; 
+    text-decoration: none;
+  }
+  
+  .sider {
+    position: relative; 
+  }
+  
+  .admin-avatar {
+  display: flex; 
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  padding: 10px; 
+  transition: background-color 0.3s; 
+}
+
+.admin-avatar:hover {
+  background-color: rgba(255, 255, 255, 0.2); 
+}
+
+.admin-name {
+  color: white; 
+  font-size: 16px; 
+  margin-left: 10px; 
+}
+
+.admin-avatar .ms-2 {
+  margin-left: 10px; 
+}
+
+  
+
+  
+
+  

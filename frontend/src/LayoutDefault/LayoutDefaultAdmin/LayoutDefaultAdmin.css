@@ -1,0 +1,52 @@
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; 
+}
+  
+  main.admin-layout {
+    display: flex; 
+    flex: 1; 
+  }
+  
+  .sidebar {
+    width: 210px;
+    background-color: black;
+    padding-top: 20px;
+    color: white;
+    height: 100%; /* Ensure sidebar takes full height */
+    overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+  .sidebar ul {
+    list-style-type: none; 
+    padding: 0; 
+  }
+  
+  .sidebar ul li {
+    margin: 30px 0px;
+    border-bottom: 2px solid;
+  }
+  
+  .sidebar ul li a {
+    color: white; 
+    text-decoration: none; 
+    font-size: 1.1em; 
+    font-weight: bold;
+  }
+  .sidebar ul li a.active {
+  color: brown; 
+  font-weight: bold; 
+}
+
+  
+  .sidebar ul li a:hover {
+    color: brown;
+  }
+  
+  .content {
+    flex: 1;
+    padding: 20px;
+    background-color: #f8f9fa;
+    overflow-y: auto; /* Allow scrolling if content overflows */
+}
