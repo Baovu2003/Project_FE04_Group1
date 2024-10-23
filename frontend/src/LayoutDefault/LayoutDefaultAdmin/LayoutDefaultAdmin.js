@@ -28,6 +28,9 @@ function LayoutDefaultAdmin() {
             <li>
               <NavLink to="permissions" activeClassName="active">Phân quyền</NavLink>
             </li>
+            <li>
+              <NavLink to="accounts" activeClassName="active">Danh sách tài khoản</NavLink>
+            </li>
           </ul>
         </div>
         <div className="content">
