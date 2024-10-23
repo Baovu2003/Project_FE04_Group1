@@ -60,6 +60,23 @@ export const post = async (url, values) => {
   return response;
 };
 
+export const postV2 = async (url, values) => {
+  const options = {
+    method: "POST",
+    mode: "cors",
+    body: values, 
+  };
+  
+  const response = await fetch(url, options);
+  
+  console.log("response", response);
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText || response.statusText);
+  }
+
+  return response;
+};
 export const deleteItem = async (url) => {
   const deleteMethod = {
     method: "DELETE", // Method itself

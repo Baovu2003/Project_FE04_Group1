@@ -22,6 +22,9 @@ import CreateCategory from "./pages/admin/Category/CreateCategory";
 import RolesList from "./pages/admin/RoleGroup/RoleList";
 import CreateRole from "./pages/admin/RoleGroup/CreateRole";
 import UpdateRole from "./pages/admin/RoleGroup/UpdateRole";
+import AccountIndex from "./pages/Accounts/AccountIndex";
+import AccountList from "./pages/Accounts/AccountList";
+import AccountCreate from "./pages/Accounts/AccountCreate";
 
 function App() {
   return (
@@ -55,6 +58,13 @@ function App() {
             <Route path="create" element={<CreateRole />} />
             <Route path="edit/:id" element={<UpdateRole />} />
           </Route>
+
+          <Route path="accounts" element={<AccountIndex />}>
+            <Route index element={<AccountList />} />
+            <Route path="create" element={<AccountCreate />} />
+            {/* <Route path="edit/:id" element={<UpdateRole />} /> */}
+          </Route>
+
           <Route path="permissions" element={<Permisssions />} />
           <Route path="*" element={<NotFoundAdmin />} />
         </Route>

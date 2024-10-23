@@ -23,11 +23,14 @@ const express = require("express");
 const router = express.Router();
 const controller = require("../../controller/admin/role.controller");
 
-router.get("/", controller.index); // Kiểm tra rằng controller.index đã được xuất đúng
+router.get("/", controller.index);
 router.post("/create", controller.createPost);
 router.get("/edit/:id", controller.edit);
 router.patch("/edit/:id", controller.editPatch);
-// router.get("/permissions", controller.permissions);
-// router.patch("/permissions", controller.permissionsPatch);
+
+router.get("/permissions", controller.permissions);
+router.patch("/permissions", controller.permissionsPatch);
+
 
 module.exports = router;
+
