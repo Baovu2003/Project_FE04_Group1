@@ -90,13 +90,13 @@ function AccountList() {
                 </td>
                 <td>
                   <Link
-                    to={`/accounts/${account._id}`}
+                    to={`accounts/${account._id}`}
                    className="btn btn-primary me-2"
                   >
                     Detail
                   </Link>
                   <Link
-                    to={`/accounts/edit/${account._id}`}
+                    to={`accounts/edit/${account._id}`}
                   className="btn btn-warning me-2"
                   >
                     Edit

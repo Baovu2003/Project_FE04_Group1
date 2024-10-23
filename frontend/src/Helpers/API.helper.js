@@ -38,9 +38,8 @@ export const patch = async (url, values) => {
 };
 
 export const post = async (url, values) => {
-  
-  console.log("url",url)
-  console.log("values",values)
+  console.log("url", url);
+  console.log("values", values);
 
   const options = {
     method: "POST",
@@ -48,17 +47,23 @@ export const post = async (url, values) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(values),
   };
-  const response = await fetch(url, options);
 
-  console.log("response",response)
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || response.statusText);
+  try {
+    const response = await fetch(url, options);
+    console.log("response", response);
+
+    if (!response.ok) {
+      const errorData = await response.json(); // Parse lỗi từ backend
+      throw new Error(JSON.stringify(errorData)); // Ném lỗi dưới dạng chuỗi JSON
+    }
+
+    return response; // Trả về phản hồi nếu thành công
+  } catch (error) {
+    console.error("Error occurred during POST request:", error);
+    throw error; // Ném lỗi để xử lý tại frontend
   }
-
-  // Trả về đối tượng phản hồi
-  return response;
 };
+
 
 export const postV2 = async (url, values) => {
   const options = {
