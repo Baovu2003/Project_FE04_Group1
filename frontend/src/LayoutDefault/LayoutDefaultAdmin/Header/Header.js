@@ -1,8 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Header.css";
 import { FaCog, FaUser } from "react-icons/fa";
+import { Button } from "react-bootstrap";
 const Header = () => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    // Xóa token khỏi cookie
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/"; // Đặt ngày hết hạn về trước
+
+    // Hoặc xóa token khỏi local storage
+    // localStorage.removeItem('token');
+
+    // Chuyển hướng người dùng về trang đăng nhập
+    navigate("auth/login");
+  };
   return (
     <header className="header">
       <div className="container-fluid">
@@ -25,16 +37,12 @@ const Header = () => {
                 <span className="admin-name">Admin Name</span>{" "}
               </div>
 
-              {/* Authentication Buttons */}
-              <Link to="/signin" className="btn btn-primary auth-btn">
+              <Link to="auth/login" className="btn btn-primary auth-btn">
                 Sign In
               </Link>
-              <Link
-                to="/signup"
-                className="btn btn-secondary auth-btn signup-btn"
-              >
-                Sign Up
-              </Link>
+              <Button onClick={handleLogout} variant="danger">
+                Logout
+              </Button>
             </div>
           </div>
         </div>

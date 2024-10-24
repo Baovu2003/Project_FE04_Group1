@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { get } from '../../../Helpers/API.helper';
 
 function DetailProduct() {
   const { id } = useParams(); // Get the product ID from the URL
@@ -12,13 +13,7 @@ function DetailProduct() {
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/admin/products/detail/${id}`);
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch product details');
-        }
-        
-        const data = await response.json();
+        const data = await get(`http://localhost:5000/admin/products/detail/${id}`);    
         setProduct(data.product);
         setLoading(false);
       } catch (error) {

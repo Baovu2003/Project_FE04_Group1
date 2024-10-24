@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { post } from "../../../Helpers/API.helper";
+import { get, post } from "../../../Helpers/API.helper";
 import Notification from "../../../Helpers/Notification ";
 
 function CreateProduct() {
@@ -11,10 +11,10 @@ function CreateProduct() {
   const [discountPercentage, setDiscountPercentage] = useState(0);
   const [stock, setStock] = useState(0);
   const [thumbnail, setThumbnail] = useState(null);
-  const [categories, setCategories] = useState([]);
+  const [product_category_id, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [position, setPosition] = useState(""); // New state for position
-  const [status, setStatus] = useState("active"); // New state for status
+  const [position, setPosition] = useState(""); // State for position
+  const [status, setStatus] = useState("active"); // State for status
 
   const [message, setMessage] = useState(""); // State for success/error message
   const [type, setType] = useState(""); // Success or error type
@@ -23,11 +23,8 @@ function CreateProduct() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:5000/admin/products-category"
-        );
-        const data = await response.json();
-        console.log("data", data.records);
+        const data = await get("http://localhost:5000/admin/products-category");
+        console.log("Categories fetched:", data.records);
         setCategories(data.records); // Assume the API returns an array of categories
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -39,34 +36,45 @@ function CreateProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    console.log(selectedCategory)
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
     formData.append("price", price);
     formData.append("discountPercentage", discountPercentage);
     formData.append("stock", stock);
-    formData.append("category_id", selectedCategory);
-    formData.append("thumbnail", thumbnail); // Append file
+    formData.append("product_category_id", selectedCategory);
+    formData.append("thumbnail", thumbnail);
     formData.append("position", position);
     formData.append("status", status);
-
-    console.log("productData", formData);
-
+  
     try {
-      await fetch("http://localhost:5000/admin/products/create", {
-        method: "POST",
-        body: formData, // Pass formData in the request body
-      });
-      setMessage("Products created successfully!");
-      setType("success"); // Success notification
+      await post("http://localhost:5000/admin/products/create", formData);
+      setMessage("Product created successfully!");
+      setType("success");
       setTimeout(() => {
         navigate("/admin/products");
       }, 2000);
     } catch (error) {
       setMessage("Error submitting form.");
       setType("error");
+      console.error("Submission error:", error);
     }
+  };
+  
+  const renderSelectTree = (records, level = 0) => {
+    return records.map((item) => {
+      const prefix = Array(level + 1).join("-- ");
+      return (
+        <React.Fragment key={item.id}>
+          <option value={item.id}>
+            {prefix} {item.title}
+          </option>
+          {item.children && item.children.length > 0 && renderSelectTree(item.children, level + 1)}
+        </React.Fragment>
+      );
+    });
   };
 
   return (
@@ -153,12 +161,7 @@ function CreateProduct() {
             required
           >
             <option value="">-- Choose a Category --</option>
-            {categories &&
-              categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.title}
-                </option>
-              ))}
+            {renderSelectTree(product_category_id)}
           </Form.Control>
         </Form.Group>
 
@@ -169,7 +172,7 @@ function CreateProduct() {
             <Form.Check
               type="radio"
               id="statusActive"
-              label="Hoạt động"
+              label="Active"
               name="status"
               value="active"
               checked={status === "active"}
@@ -177,8 +180,8 @@ function CreateProduct() {
             />
             <Form.Check
               type="radio"
-              id="statusInActive"
-              label="Dừng hoạt động"
+              id="statusInactive"
+              label="Inactive"
               name="status"
               value="inactive"
               checked={status === "inactive"}

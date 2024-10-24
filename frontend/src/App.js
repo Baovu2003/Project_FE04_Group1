@@ -26,6 +26,7 @@ import AccountIndex from "./pages/admin/Accounts/AccountIndex";
 import AccountList from "./pages/admin/Accounts/AccountList";
 import AccountCreate from "./pages/admin/Accounts/AccountCreate";
 import Login from "./pages/admin/Auth/Login/Login";
+import ProtectedRoute from "./pages/admin/ProtectedRoute/ProtectedRoute";
 
 function App() {
   return (
@@ -41,35 +42,38 @@ function App() {
 
         {/* Admin Routes */}
         <Route path="/admin" element={<LayoutDefaultAdmin />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="products-category" element={<AllCategory />}>
-            <Route index element={<Category />} />
-            <Route path="create" element={<CreateCategory />} />
-          </Route>
+          \
+          <Route element={<ProtectedRoute />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="products-category" element={<AllCategory />}>
+              <Route index element={<Category />} />
+              <Route path="create" element={<CreateCategory />} />
+            </Route>
 
-          <Route path="products" element={<AllProduct />}>
-            <Route index element={<Product />} />
-            <Route path="create" element={<Createproduct />} />
-            <Route path="detail/:id" element={<DetailProduct />} />
-            <Route path="edit/:id" element={<UpdateProduct />} />{" "}
-          </Route>
+            <Route path="products" element={<AllProduct />}>
+              <Route index element={<Product />} />
+              <Route path="create" element={<Createproduct />} />
+              <Route path="detail/:id" element={<DetailProduct />} />
+              <Route path="edit/:id" element={<UpdateProduct />} />{" "}
+            </Route>
 
-          <Route path="roles" element={<RoleGroup />}>
-            <Route index element={<RolesList />} />
-            <Route path="create" element={<CreateRole />} />
-            <Route path="edit/:id" element={<UpdateRole />} />
-          </Route>
+            <Route path="roles" element={<RoleGroup />}>
+              <Route index element={<RolesList />} />
+              <Route path="create" element={<CreateRole />} />
+              <Route path="edit/:id" element={<UpdateRole />} />
+            </Route>
 
-          <Route path="accounts" element={<AccountIndex />}>
-            <Route index element={<AccountList />} />
-            <Route path="create" element={<AccountCreate />} />
-            {/* <Route path="edit/:id" element={<UpdateRole />} /> */}
-          </Route>
+            <Route path="accounts" element={<AccountIndex />}>
+              <Route index element={<AccountList />} />
+              <Route path="create" element={<AccountCreate />} />
+              {/* <Route path="edit/:id" element={<UpdateRole />} /> */}
+            </Route>
 
-          <Route path="permissions" element={<Permisssions />} />
-          <Route path="*" element={<NotFoundAdmin />} />
+            <Route path="permissions" element={<Permisssions />} />
+            <Route path="*" element={<NotFoundAdmin />} />
+          </Route>
         </Route>
-        <Route path="/admin/auth/login" element={<Login/>}/>
+        <Route path="/admin/auth/login" element={<Login />} />
       </Routes>
     </Router>
   );

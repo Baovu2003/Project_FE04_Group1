@@ -1,143 +1,89 @@
 
+import axios from "axios";
 
 export const get = async (url) => {
-  const response = await fetch(url, {
-    method: "GET",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  console.log("url", url);
 
-  const data = await response.json();
-  return data;
-};
+  try {
+    const response = await axios.get(url, {
+      withCredentials: true, // Include cookies with the request
+    });
 
-
-export const patch = async (url, values) => {
-  console.log("url bên apiHelper",url)
-  const init = {
-    method: "PATCH",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "TOKEN",
-    },
-    body: JSON.stringify(values),
-  };
-  const response = await fetch(url, init);
-  console.log("response bên api patch",response)
-
-  // check lỗi 
-  if (!response.ok) {
-    // message.error(response.status, response.statusText)
-    console.log(response.status)
+    return response.data; // Return data directly from the response
+  } catch (error) {
+    const errorMsg = error.response?.data?.message || "An error occurred.";
+    console.error("Error occurred during GET request:", error);
+    throw new Error(errorMsg); // Throw error with a readable message
   }
-  const data = await response.json();
-  return data;
 };
-
 export const post = async (url, values) => {
   console.log("url", url);
   console.log("values", values);
 
-  const options = {
-    method: "POST",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(values),
-  };
+  try {
+    const response = await axios.post(url, values, {
+      withCredentials: true, 
+    });
+
+    return response.data; // Return data directly from the response
+  } catch (error) {
+    // Handle error responses
+    const errorMsg = error.response?.data?.message || "An error occurred.";
+    console.error("Error occurred during POST request:", error);
+    throw new Error(errorMsg); // Throw error with a readable message
+  }
+};
+export const patch = async (url, values) => {
+  console.log("url", url);
+  console.log("values", values);
 
   try {
-    const response = await fetch(url, options);
-    console.log("response", response);
+    const response = await axios.patch(url, values, {
+      withCredentials: true, // Include cookies with the request
+    });
 
-    if (!response.ok) {
-      const errorData = await response.json(); // Parse lỗi từ backend
-      throw new Error(JSON.stringify(errorData)); // Ném lỗi dưới dạng chuỗi JSON
-    }
-
-    return response; // Trả về phản hồi nếu thành công
+    return response.data; // Return data directly from the response
   } catch (error) {
-    console.error("Error occurred during POST request:", error);
-    throw error; // Ném lỗi để xử lý tại frontend
+    const errorMsg = error.response?.data?.message || "An error occurred.";
+    console.error("Error occurred during PATCH request:", error);
+    throw new Error(errorMsg); // Throw error with a readable message
   }
 };
 
-
-export const postV2 = async (url, values) => {
-  const options = {
-    method: "POST",
-    mode: "cors",
-    body: values, 
-  };
-  
-  const response = await fetch(url, options);
-  
-  console.log("response", response);
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || response.statusText);
-  }
-
-  return response;
-};
 export const deleteItem = async (url) => {
-  const deleteMethod = {
-    method: "DELETE", // Method itself
-    mode: "cors", // Chế độ CORS
-    headers: {
-      "Content-Type": "application/json; charset=UTF-8",
-    },
-  };
+  console.log("url", url);
 
-  const response = await fetch(url, deleteMethod);
-  const data = await response.json();
+  try {
+    const response = await axios.delete(url, {
+      withCredentials: true, // Include cookies with the request
+    });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || response.statusText);
+    return response.data; // Return data directly from the response
+  } catch (error) {
+    const errorMsg = error.response?.data?.message || "An error occurred.";
+    console.error("Error occurred during DELETE request:", error);
+    throw new Error(errorMsg); // Throw error with a readable message
   }
-
-  // Trả về đối tượng phản hồi
-  return response;
 };
 
-export const put = async (url, values) => {
-  const options = {
-    method: "PUT",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(values),
-  };
 
-  const response = await fetch(url, options);
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || response.statusText);
+export const verifyToken = async (token) => {
+  console.log("Verifying token:", token);
+
+  try {
+    const response = await axios.post("http://localhost:5000/admin/auth/verify-token", {}, {
+      headers: {
+        Authorization: `${token}`, // Gửi token dưới dạng Bearer token
+      },
+      withCredentials: true, // Bao gồm cookies trong yêu cầu
+    });
+
+    return response.data; // Mong đợi { valid: true/false }
+  } catch (error) {
+    const errorMsg = error.response?.data?.message || "Token verification failed.";
+    console.error("Error occurred during token verification:", error);
+    throw new Error(errorMsg); // Ném lỗi với thông điệp dễ đọc
   }
-
-  // Trả về đối tượng phản hồi
-  return response;
 };
 
-export const putV2 = async (url, values) => {
-  const options = {
-    method: "PUT",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(values),
-  };
-
-  const response = await fetch(url, options);
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || response.statusText);
-  }
-
-  // Trả về đối tượng phản hồi
-  const data = await response.json();
-  return data;
-};

@@ -33,7 +33,8 @@ const port = process.env.PORT;
 
 // Cấu hình CORS
 app.use(cors({
-  origin: 'http://localhost:3000' // Thay đổi nếu frontend của bạn chạy ở một địa chỉ khác
+  origin: 'http://localhost:3000', // Thay đổi theo địa chỉ frontend
+  credentials: true, // Cho phép gửi cookie
 }));
 app.use(methodOverride("_method"));
 

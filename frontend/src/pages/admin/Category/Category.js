@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { deleteItem, patch } from "../../../Helpers/API.helper";
+import { deleteItem, get, patch } from "../../../Helpers/API.helper";
 import Modal from "../../../Helpers/Modal "; // Import the Modal component
 function Category() {
   const [categories, setCategories] = useState([]);
@@ -21,16 +21,14 @@ function Category() {
 
   const fetchCategory = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:5000/admin/products-category"
-      );
-      const data = await response.json();
-      console.log("data.records:", data.records);
-      setCategories(data.records);
+      const data = await get("http://localhost:5000/admin/products-category"); // Directly use the parsed data
+      console.log("data.records:", data.records); // Log the records
+      setCategories(data.records); // Set categories to the records directly
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.error("Error fetching categories:", error); // Handle errors here
     }
   };
+  
   const handleStatusChange = (productId, currentStatus) => {
     console.log(productId, currentStatus);
     const status = currentStatus === "active" ? "inactive" : "active";

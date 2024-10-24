@@ -1,39 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, InputGroup, FormControl } from "react-bootstrap";
 import { FaUser, FaLock } from "react-icons/fa";
 import "./Login.css";
 import { post } from "../../../../Helpers/API.helper";
+import { useNavigate } from "react-router-dom";
 import Notification from "../../../../Helpers/Notification ";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
-  const [errorMessage, setErrorMessage] = useState(""); // State to handle error messages
-  const [successMessage, setSuccessMessage] = useState(""); // Optional success message handling
+  const [errorMessage, setErrorMessage] = useState(""); 
+  const [successMessage, setSuccessMessage] = useState(""); 
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(""); // Xóa thông báo lỗi trước khi submit
+    setErrorMessage(""); 
+    setSuccessMessage(""); 
   
     try {
-      const response = await post("http://localhost:5000/admin/auth/loginPost", {
+      const data = await post("http://localhost:5000/admin/auth/loginPost", {
         email: username,
         password: password,
       });
   
-      const data = await response.json();
-      console.log("Response from server:", data);
-  
-      if (response.ok) {
+      if (data.token) {
         setSuccessMessage("Login successful! Redirecting...");
-        console.log("Login successful");
-        // Xử lý logic chuyển trang sau khi đăng nhập thành công
+        document.cookie = `token=${data.token}; path=/; max-age=86400`; // Cookie lasts 1 day
+        
+        setTimeout(() => {
+          navigate("/admin/dashboard");
+        }, 500);
+      } else {
+        throw new Error("Token not received. Login failed."); 
       }
     } catch (error) {
-      // Parse lỗi trả về từ backend
-      const errorMsg = JSON.parse(error.message)?.message || "An error occurred. Please try again later.";
-      setErrorMessage(errorMsg); // Hiển thị thông báo lỗi chi tiết
+      console.log(error)
+      console.log(error.message)
+      if (error.message) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("An error occurred. Please try again later.");
+      }
     }
   };
   

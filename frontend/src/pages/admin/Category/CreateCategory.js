@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { post } from "../../../Helpers/API.helper";
+import { get, post } from "../../../Helpers/API.helper";
 
 function CreateCategory() {
   const [title, setTitle] = useState("");
@@ -16,10 +16,9 @@ function CreateCategory() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(
+        const data = await get(
           "http://localhost:5000/admin/products-category"
         );
-        const data = await response.json();
         console.log("data", data.records);
         setCategories(data.records); // Assume the API returns an array of categories
       } catch (error) {

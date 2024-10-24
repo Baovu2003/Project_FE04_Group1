@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import Notification from "../../../Helpers/Notification ";
-import { postV2 } from "../../../Helpers/API.helper";
+import { post, postV2 } from "../../../Helpers/API.helper";
+
 
 function AccountCreate() {
   const [roles, setRoles] = useState([]);
@@ -118,7 +119,7 @@ function AccountCreate() {
     formData.append("status", status);
 
     try {
-      const response = await postV2(
+      const response = await post(
         "http://localhost:5000/admin/accounts/create",
         formData // Send FormData instead of JSON
       );

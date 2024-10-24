@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom"; // Import useNavigate
-import { get } from "../../../Helpers/API.helper";
+import { get, patch } from "../../../Helpers/API.helper";
 
 function UpdateProduct() {
   const { id } = useParams(); // Get the product ID from the URL
@@ -36,35 +36,62 @@ function UpdateProduct() {
     fetchProductDetails();
   }, [id]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await get("http://localhost:5000/admin/products-category");
+        console.log("Categories fetched:", data.records);
+        setCategories(data.records); // Assume the API returns an array of categories
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+  const renderSelectTree = (records, level = 0) => {
+    return records.map((item) => {
+      const prefix = Array(level + 1).join("-- ");
+      return (
+        <React.Fragment key={item.id}>
+          <option value={item.id}>
+            {prefix} {item.title}
+          </option>
+          {item.children && item.children.length > 0 && renderSelectTree(item.children, level + 1)}
+        </React.Fragment>
+      );
+    });
+  };
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const formData = new FormData();
     for (const key in product) {
       formData.append(key, product[key]);
     }
-
+  
     try {
-      const response = await fetch(
-        `http://localhost:5000/admin/products/edit/${id}?_method=PATCH`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to update product");
-
-      setNotification("Product updated successfully!"); // Set success notification
+      const data = await patch(`http://localhost:5000/admin/products/edit/${id}?_method=PATCH`, formData);
+      
+      // If your backend sends a success message in the response, you can access it like this:
+      if (data && data.message) {
+        setNotification(data.message); // Set success notification from the response
+      } else {
+        setNotification("Product updated successfully!"); // Default success message if none provided
+      }
+  
       // Redirect after a short delay
       setTimeout(() => {
         navigate("/admin/products"); // Use navigate for redirection
       }, 2000); // Redirects after 2 seconds
+  
     } catch (error) {
       setNotification("Product update was not successful!"); // Set notification on error
+      console.error("Error during product update:", error); // Log the error for debugging
     }
   };
+  
 
   // Handle file change
   const handleFileChange = (e) => {
@@ -128,11 +155,7 @@ function UpdateProduct() {
             }
           >
             <option value="">--Chọn danh mục cha--</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
+            {renderSelectTree(categories)}
           </select>
         </div>
 

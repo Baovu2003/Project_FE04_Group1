@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { get } from "../../../Helpers/API.helper";
 
 function AccountList() {
   const [roles, setRoles] = useState([]);
@@ -18,8 +19,7 @@ function AccountList() {
 
   const fetchRoles = async () => {
     try {
-      const response = await fetch("http://localhost:5000/admin/roles");
-      const data = await response.json();
+      const data = await get("http://localhost:5000/admin/roles");
       console.log(data);
       setRoles(data.records);
     } catch (error) {
@@ -30,11 +30,8 @@ function AccountList() {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const response = await fetch("http://localhost:5000/admin/accounts");
-        if (!response.ok) {
-          throw new Error("Error fetching accounts");
-        }
-        const data = await response.json();
+        const data = await get("http://localhost:5000/admin/accounts");
+        
         console.log(data);
         setAccounts(data.records); // Giả sử API trả về mảng tài khoản
       } catch (error) {
@@ -77,7 +74,7 @@ function AccountList() {
                 <td>{account.phone}</td>
                 <td>
                   <td>{getRoleName(account.role_id)}</td>
-                </td>             
+                </td>                          
                 <td>
                   <Button
                     variant={account.status === "active" ? "success" : "danger"}

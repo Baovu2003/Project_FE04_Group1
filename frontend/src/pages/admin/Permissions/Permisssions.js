@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { patch } from "../../../Helpers/API.helper";
+import { get, patch } from "../../../Helpers/API.helper";
 import Notification from "../../../Helpers/Notification ";
 
 function Permissions() {
@@ -18,10 +18,10 @@ function Permissions() {
 
   const fetchPermissions = async () => {
     try {
-      const response = await fetch(
+      const data = await get(
         "http://localhost:5000/admin/roles/permissions"
       );
-      const data = await response.json();
+      
       setPermissions(data.records);
       // Initialize updatedPermissions state with empty arrays for permissionsChild
       const initialPermissions = data.records.map((record) => ({

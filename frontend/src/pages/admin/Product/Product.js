@@ -8,11 +8,13 @@ import {
   Form,
   InputGroup,
 } from "react-bootstrap";
-import { deleteItem, patch } from "../../../Helpers/API.helper";
+import { deleteItem, get, patch } from "../../../Helpers/API.helper";
 import "../../../Helpers/Modal.css";
 import "../../../Helpers/Notification.css";
 import { Link } from "react-router-dom";
 import Modal from "../../../Helpers/Modal "; // Import the Modal component
+
+import axios from "axios";
 function ProductList() {
   const [products, setProducts] = useState([]);
 
@@ -40,12 +42,14 @@ function ProductList() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/admin/products`);
-      const data = await response.json();
+      const data = await get("http://localhost:5000/admin/products"); // Directly get the parsed data
+      console.log(data);
+  
+      // Assuming the structure of your response is similar to axios
       setProducts(data.products);
       setFilteredProducts(data.products); // Set filtered products to the entire list initially
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error("Error fetching products:", error); // Handle errors here
     }
   };
 
@@ -116,9 +120,10 @@ function ProductList() {
   };
 
   // Calculate total pages
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredProducts?.length / itemsPerPage);
+  console.log(totalPages);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentProducts = filteredProducts.slice(
+  const currentProducts = filteredProducts?.slice(
     startIndex,
     startIndex + itemsPerPage
   );
@@ -182,7 +187,6 @@ function ProductList() {
 
     setIsDeleteModalOpen(false); // Đóng modal xóa
   };
-
 
   console.log({ filterStatus, searchKeyword, sortOrder, filterDeleted });
   return (
@@ -287,73 +291,76 @@ function ProductList() {
             </tr>
           </thead>
           <tbody>
-            {currentProducts.map((product, index) => (
-              <tr key={product._id}>
-                <td>
-                  <input type="checkbox" name="id" value={product._id} />
-                </td>
-                <td>{startIndex + index + 1}</td>
-                <td>
-                  <img
-                    src={
-                      product.thumbnail
-                        ? product.thumbnail.startsWith("http")
-                          ? product.thumbnail
-                          : `http://localhost:5000${product.thumbnail}`
-                        : "http://localhost:5000/path-to-placeholder-image.png" // Placeholder image URL
-                    }
-                    alt={product.title || "Placeholder Image"}
-                    width="100px"
-                    height="auto"
-                  />
-                </td>
+            {currentProducts &&
+              currentProducts.map((product, index) => (
+                <tr key={product._id}>
+                  <td>
+                    <input type="checkbox" name="id" value={product._id} />
+                  </td>
+                  <td>{startIndex + index + 1}</td>
+                  <td>
+                    <img
+                      src={
+                        product.thumbnail
+                          ? product.thumbnail.startsWith("http")
+                            ? product.thumbnail
+                            : `http://localhost:5000${product.thumbnail}`
+                          : "http://localhost:5000/path-to-placeholder-image.png" // Placeholder image URL
+                      }
+                      alt={product.title || "Placeholder Image"}
+                      width="100px"
+                      height="auto"
+                    />
+                  </td>
 
-                <td>{product.title}</td>
-                <td>{product.price}$</td>
-                <td>{product.position}</td>
-                <td>
-                  <Button
-                    variant={product.status === "active" ? "success" : "danger"}
-                    onClick={() =>
-                      handleStatusChange(product._id, product.status)
-                    } // Call handler on click
-                  >
-                    {product.status === "active" ? "Active" : "Inactive"}
-                  </Button>
-                </td>
-                <td>
-                  {/* Hiển thị trạng thái đã xóa */}
-                  {product.deleted ? (
-                    <h6 className="text-danger">Đã xóa</h6>
-                  ) : (
-                    <h6 className="text-success">Chưa xóa</h6>
-                  )}
-                </td>
+                  <td>{product.title}</td>
+                  <td>{product.price}$</td>
+                  <td>{product.position}</td>
+                  <td>
+                    <Button
+                      variant={
+                        product.status === "active" ? "success" : "danger"
+                      }
+                      onClick={() =>
+                        handleStatusChange(product._id, product.status)
+                      } // Call handler on click
+                    >
+                      {product.status === "active" ? "Active" : "Inactive"}
+                    </Button>
+                  </td>
+                  <td>
+                    {/* Hiển thị trạng thái đã xóa */}
+                    {product.deleted ? (
+                      <h6 className="text-danger">Đã xóa</h6>
+                    ) : (
+                      <h6 className="text-success">Chưa xóa</h6>
+                    )}
+                  </td>
 
-                <td>
-                  <Link
-                    to={`detail/${product._id}`}
-                    className="btn btn-primary me-2"
-                  >
-                    Detail
-                  </Link>
-                  <Link
-                    to={`edit/${product._id}`}
-                    className="btn btn-warning me-2"
-                  >
-                    Update
-                  </Link>
+                  <td>
+                    <Link
+                      to={`detail/${product._id}`}
+                      className="btn btn-primary me-2"
+                    >
+                      Detail
+                    </Link>
+                    <Link
+                      to={`edit/${product._id}`}
+                      className="btn btn-warning me-2"
+                    >
+                      Update
+                    </Link>
 
-                  <Button
-                    variant={product.deleted ? "success" : "danger"}
-                    onClick={() => handleDelete(product._id)}
-                    className="ms-2"
-                  >
-                    {product.deleted ? "Undeleted" : "Deleted"}
-                  </Button>
-                </td>
-              </tr>
-            ))}
+                    <Button
+                      variant={product.deleted ? "success" : "danger"}
+                      onClick={() => handleDelete(product._id)}
+                      className="ms-2"
+                    >
+                      {product.deleted ? "Undeleted" : "Deleted"}
+                    </Button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </Table>
       ) : (

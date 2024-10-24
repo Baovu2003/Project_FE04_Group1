@@ -20,16 +20,45 @@ module.exports.loginPost = async (req, res) => {
 
   // If the user exists, you can check the password and proceed with login logic
   const hashedPassword = md5(password); // Assuming you're hashing the password with md5
-  console.log(hashedPassword)
-  console.log(md5(password))
-  console.log(user.password)
+  console.log(hashedPassword);
+  console.log(md5(password));
+  console.log(user.password);
   if (user.password !== hashedPassword) {
     return res.status(401).json({ message: "Incorrect password" });
   }
-  if(user.status == "inactive"){
+  if (user.status == "inactive") {
     return res.status(401).json({ message: "Tài Khoản đã bị khoá" });
   }
 
   // Continue with login process (e.g., generating JWT token, session, etc.)
-  res.status(200).json({ message: "Login successful" });
+  console.log(user.token);
+  res.cookie("token", user.token);
+  res.status(200).json({ message: "Login successful", token: user.token });
+};
+
+module.exports.verifyToken = async (req, res) => {
+
+  const token = req.headers.authorization
+
+  console.log(token)
+  if (!token) {
+    return res
+      .status(401)
+      .json({ valid: false, message: "No token provided." });
+  }
+
+  try {
+    const user = await Account.findOne({ token });
+
+    if (!user) {
+      return res.status(401).json({ valid: false, message: "Invalid token." });
+    }
+
+    return res.status(200).json({ valid: true });
+  } catch (error) {
+    console.error("Error verifying token:", error);
+    return res
+      .status(500)
+      .json({ valid: false, message: "Internal server error." });
+  }
 };

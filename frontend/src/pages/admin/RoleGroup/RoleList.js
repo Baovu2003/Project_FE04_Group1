@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { get } from "../../../Helpers/API.helper";
 
 const RolesList = () => {
   const [roles, setRoles] = useState([]);
@@ -13,8 +14,8 @@ const RolesList = () => {
 
   const fetchRoles = async () => {
     try {
-      const response = await fetch("http://localhost:5000/admin/roles");
-      const data = await response.json();
+      const data = await get("http://localhost:5000/admin/roles");
+     
       console.log(data);
       setRoles(data.records);
     } catch (error) {

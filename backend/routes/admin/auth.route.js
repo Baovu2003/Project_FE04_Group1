@@ -4,5 +4,5 @@ const controller = require("../../controller/admin/auth.controller");
 
 // router.get("/login", controller.login);
 router.post("/loginPost", controller.loginPost);
-
+router.post("/verify-token", controller.verifyToken)
 module.exports = router;
