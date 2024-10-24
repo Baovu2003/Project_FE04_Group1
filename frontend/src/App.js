@@ -26,7 +26,7 @@ import AccountIndex from "./pages/admin/Accounts/AccountIndex";
 import AccountList from "./pages/admin/Accounts/AccountList";
 import AccountCreate from "./pages/admin/Accounts/AccountCreate";
 import Login from "./pages/admin/Auth/Login/Login";
-import ProtectedRoute from "./pages/admin/ProtectedRoute/ProtectedRoute";
+import ProtectedRoute from "./pages/admin/ProtectedRoute/ProtectedRoute ";
 
 function App() {
   return (
@@ -42,7 +42,6 @@ function App() {
 
         {/* Admin Routes */}
         <Route path="/admin" element={<LayoutDefaultAdmin />}>
-          \
           <Route element={<ProtectedRoute />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="products-category" element={<AllCategory />}>
