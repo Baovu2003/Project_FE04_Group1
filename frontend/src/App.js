@@ -30,6 +30,10 @@ import ProtectedRoute from "./pages/admin/ProtectedRoute/ProtectedRoute ";
 
 function App() {
   return (
+    // <>
+    //   <Counter/>
+    // </>
+
     <Router>
       <Routes>
         <Route path="/" element={<LayoutDefault />}>

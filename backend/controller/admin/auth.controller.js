@@ -1,6 +1,6 @@
 const md5 = require("md5");
 const Account = require("../../models/account.model");
-
+const Role = require("../../models/roles.model");
 module.exports.loginPost = async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -33,8 +33,12 @@ module.exports.loginPost = async (req, res) => {
   // Continue with login process (e.g., generating JWT token, session, etc.)
   console.log(user.token);
   res.cookie("token", user.token);
-  res.status(200).json({ message: "Login successful", token: user.token });
+  const role = await Role.findOne({
+    _id: user.role_id,
+  }).select("title permission");
+  res.status(200).json({ message: "Login successful", token: user.token, user: user, role:role });
 };
+
 
 module.exports.verifyToken = async (req, res) => {
 
@@ -60,5 +64,30 @@ module.exports.verifyToken = async (req, res) => {
     return res
       .status(500)
       .json({ valid: false, message: "Internal server error." });
+  }
+};
+
+module.exports.verifyTokenByToken = async (req, res) => {
+  const token = req.params.token; // Extract token from the route parameter
+
+  if (!token) {
+    return res.status(401).json({ valid: false, message: "No token provided." });
+  }
+
+  try {
+    const user = await Account.findOne({ token });
+
+    const role = await Role.findOne({
+      _id: user.role_id,
+    }).select("title permission");
+    if (!user) {
+      return res.status(401).json({ valid: false, message: "Invalid token." });
+    }
+
+    // Optionally return user information if needed
+    return res.status(200).json({ valid: true, user,role });
+  } catch (error) {
+    console.error("Error verifying token:", error);
+    return res.status(500).json({ valid: false, message: "Internal server error." });
   }
 };

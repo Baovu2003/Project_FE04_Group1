@@ -3,6 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { get, post } from "../../../Helpers/API.helper";
 import Notification from "../../../Helpers/Notification ";
+import { useSelector } from "react-redux";
 
 function CreateProduct() {
   const [title, setTitle] = useState("");
@@ -19,6 +20,8 @@ function CreateProduct() {
   const [message, setMessage] = useState(""); // State for success/error message
   const [type, setType] = useState(""); // Success or error type
   const navigate = useNavigate();
+
+
 
   useEffect(() => {
     const fetchCategories = async () => {

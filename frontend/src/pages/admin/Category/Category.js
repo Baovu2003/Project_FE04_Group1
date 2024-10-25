@@ -3,6 +3,7 @@ import { Button, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { deleteItem, get, patch } from "../../../Helpers/API.helper";
 import Modal from "../../../Helpers/Modal "; // Import the Modal component
+import { useSelector } from "react-redux";
 function Category() {
   const [categories, setCategories] = useState([]);
 
@@ -15,6 +16,12 @@ function Category() {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productIdToDelete, setProductIdToDelete] = useState(null);
+
+  const account = useSelector((state) => state.AccountReducer);
+  console.log(account);
+
+
+  
   useEffect(() => {
     fetchCategory();
   }, []);
@@ -28,7 +35,7 @@ function Category() {
       console.error("Error fetching categories:", error); // Handle errors here
     }
   };
-  
+
   const handleStatusChange = (productId, currentStatus) => {
     console.log(productId, currentStatus);
     const status = currentStatus === "active" ? "inactive" : "active";
@@ -121,47 +128,49 @@ function Category() {
                 min="1"
                 style={{ width: "60px", borderRadius: "5px" }}
                 name="position"
+                readOnly
               />
             </td>
             <td>
-              <Button
+              {account.role.permission.includes("products-category_create") && <>
+                <Button
                 variant={item.status === "active" ? "success" : "danger"}
                 onClick={() => handleStatusChange(item._id, item.status)}
               >
                 {item.status === "active" ? "Active" : "Inactive"}
               </Button>
-            </td>           
-                <td>
-                  {/* Hiển thị trạng thái đã xóa */}
-                  {item.deleted ? (
-                    <h6 className="text-danger">Đã xóa</h6>
-                  ) : (
-                    <h6 className="text-success">Chưa xóa</h6>
-                  )}
-                </td>
+              </>}
+             
+            </td>
+            <td>
+              
+              {item.deleted ? (
+                <h6 className="text-danger">Đã xóa</h6>
+              ) : (
+                <h6 className="text-success">Chưa xóa</h6>
+              )}
+            </td>
 
-                <td>
-                  <Link
-                    to={`detail/${item._id}`}
-                    className="btn btn-primary me-2"
-                  >
-                    Detail
-                  </Link>
-                  <Link
-                    to={`edit/${item._id}`}
-                    className="btn btn-warning me-2"
-                  >
-                    Update
-                  </Link>
-
+            <td>
+              <Link to={`detail/${item._id}`} className="btn btn-primary me-2">
+                Detail
+              </Link>
+              {account.role.permission.includes("products-category_create") &&<>
+                <Link to={`edit/${item._id}`} className="btn btn-warning me-2">
+                Update
+              </Link></>}
+            
+                {account.role.permission.includes("products-category_delete") &&<>
                   <Button
-                    variant={item.deleted ? "success" : "danger"}
-                    onClick={() => handleDelete(item._id)}
-                    className="ms-2"
-                  >
-                    {item.deleted ? "Undeleted" : "Deleted"}
-                  </Button>
-                </td>
+                variant={item.deleted ? "success" : "danger"}
+                onClick={() => handleDelete(item._id)}
+                className="ms-2"
+              >
+                {item.deleted ? "Undeleted" : "Deleted"}
+              </Button>
+                </>}
+            
+            </td>
           </tr>
           {item.children &&
             item.children.length > 0 &&
@@ -178,39 +187,49 @@ function Category() {
           {notification}
         </div>
       )}
-      <h1>Category Management</h1>
-      <Row>
-        <Col md={4}>
-          <Link
-            to="/admin/products-category/create"
-            className="btn btn-success"
+
+      {account.role.permission.includes("products-category_view") && (
+        <>
+          <h1 className="mb-4">Category Management</h1>
+          {account.role.permission.includes("products-category_create") && (
+            <>
+              <Row>
+                <Col md={12} className="d-flex justify-content-end mb-4">
+                  <Link
+                    to="/admin/products-category/create"
+                    className="btn btn-success"
+                  >
+                    Create category
+                  </Link>
+                </Col>
+              </Row>
+            </>
+          )}
+
+          <form
+            action=""
+            method="POST"
+            data-path={`admin/products-category/delete`}
+            id="form-delete-item"
           >
-            Create category
-          </Link>
-        </Col>
-      </Row>
-      <form
-        action=""
-        method="POST"
-        data-path={`admin/products-category/delete`}
-        id="form-delete-item"
-      >
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Select</th>
-              <th>#</th>
-              <th>Thumbnail</th>
-              <th>Title</th>
-              <th>Position</th>
-              <th>Status</th>
-              <th>isDeleted</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>{renderTableRows(categories)}</tbody>
-        </table>
-      </form>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Select</th>
+                  <th>#</th>
+                  <th>Thumbnail</th>
+                  <th>Title</th>
+                  <th>Position</th>
+                  <th>Status</th>
+                  <th>isDeleted</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>{renderTableRows(categories)}</tbody>
+            </table>
+          </form>
+        </>
+      )}
 
       <Modal
         isOpen={isModalOpen}
@@ -219,7 +238,7 @@ function Category() {
         message={`Bạn có chắc chắn muốn thay đổi trạng thái thành "${newStatus}"?`}
       />
 
-<Modal
+      <Modal
         isOpen={isDeleteModalOpen}
         onClose={handleDeleteClose}
         onConfirm={handleDeleteConfirm}

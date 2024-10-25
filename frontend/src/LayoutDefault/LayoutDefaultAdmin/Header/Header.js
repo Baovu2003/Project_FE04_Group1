@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Header.css";
 import { FaCog, FaUser } from "react-icons/fa";
 import { Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
 const Header = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -15,6 +16,9 @@ const Header = () => {
     // Chuyển hướng người dùng về trang đăng nhập
     navigate("auth/login");
   };
+  
+  const account = useSelector((state) => state.AccountReducer);
+  console.log(account);
   return (
     <header className="header">
       <div className="container-fluid">
@@ -34,12 +38,9 @@ const Header = () => {
                   style={{ color: "white", fontSize: "20px" }}
                   title="User Profile"
                 />
-                <span className="admin-name">Admin Name</span>{" "}
+                <span className="admin-name">{account.user.fullName}-{account.role.title}</span>{" "}
               </div>
 
-              <Link to="auth/login" className="btn btn-primary auth-btn">
-                Sign In
-              </Link>
               <Button onClick={handleLogout} variant="danger">
                 Logout
               </Button>

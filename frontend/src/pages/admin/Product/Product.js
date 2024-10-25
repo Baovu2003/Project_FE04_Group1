@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import Modal from "../../../Helpers/Modal "; // Import the Modal component
 
 import axios from "axios";
+import { useSelector } from "react-redux";
 function ProductList() {
   const [products, setProducts] = useState([]);
 
@@ -36,6 +37,9 @@ function ProductList() {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productIdToDelete, setProductIdToDelete] = useState(null);
+
+  const account = useSelector((state) => state.AccountReducer);
+  console.log(account);
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -191,15 +195,16 @@ function ProductList() {
   console.log({ filterStatus, searchKeyword, sortOrder, filterDeleted });
   return (
     <Container className="my-4">
-      <h1 className="text-center mb-4">Danh sách sản phẩm</h1>
+    
       {notification && (
         <div className={`notification notification-info`} role="alert">
           {notification}
         </div>
       )}
 
-      {/* Bulk Action Form */}
-      <Row className="mb-3">
+      {account.role.permission.includes("products_view") &&<>
+        <h1 className="text-center mb-4">Danh sách sản phẩm</h1>
+        <Row className="mb-3">
         <Col>
           <form className="d-flex align-items-start">
             <div className="form-group me-2">
@@ -265,11 +270,14 @@ function ProductList() {
             <option value="title-desc">Title Z-A</option>
           </Form.Select>
         </Col>
-        <Col md={4}>
+        {account.role.permission.includes("products_view") &&<>
+          <Col md={4}>
           <Link to="/admin/products/create" className="btn btn-success">
             Create Product
           </Link>
         </Col>
+        </>}
+       
       </Row>
 
       {/* Vẽ product ra giao diện */}
@@ -317,7 +325,8 @@ function ProductList() {
                   <td>{product.price}$</td>
                   <td>{product.position}</td>
                   <td>
-                    <Button
+                    {account.role.permission.includes("products_update") &&<>
+                      <Button
                       variant={
                         product.status === "active" ? "success" : "danger"
                       }
@@ -327,6 +336,8 @@ function ProductList() {
                     >
                       {product.status === "active" ? "Active" : "Inactive"}
                     </Button>
+                    </>}
+                    
                   </td>
                   <td>
                     {/* Hiển thị trạng thái đã xóa */}
@@ -344,20 +355,25 @@ function ProductList() {
                     >
                       Detail
                     </Link>
-                    <Link
+                    {account.role.permission.includes("products_update") && <>
+                      <Link
                       to={`edit/${product._id}`}
                       className="btn btn-warning me-2"
                     >
                       Update
                     </Link>
-
-                    <Button
+                    </>}
+                    
+                      {account.role.permission.includes("products_delete") && <>
+                        <Button
                       variant={product.deleted ? "success" : "danger"}
                       onClick={() => handleDelete(product._id)}
                       className="ms-2"
                     >
                       {product.deleted ? "Undeleted" : "Deleted"}
                     </Button>
+                      </>}
+                    
                   </td>
                 </tr>
               ))}
@@ -427,6 +443,10 @@ function ProductList() {
           )}
         </ul>
       </nav>
+      </>}
+
+      {/* Bulk Action Form */}
+
 
       <Modal
         isOpen={isModalOpen}
