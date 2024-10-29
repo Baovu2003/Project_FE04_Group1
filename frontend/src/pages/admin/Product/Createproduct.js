@@ -15,7 +15,8 @@ function CreateProduct() {
   const [product_category_id, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [position, setPosition] = useState(""); // State for position
-  const [status, setStatus] = useState("active"); // State for status
+  const [status, setStatus] = useState("active"); 
+  const [featured, setFeatured] = useState("1"); 
 
   const [message, setMessage] = useState(""); // State for success/error message
   const [type, setType] = useState(""); // Success or error type
@@ -51,6 +52,7 @@ function CreateProduct() {
     formData.append("thumbnail", thumbnail);
     formData.append("position", position);
     formData.append("status", status);
+    formData.append("featured", featured);
   
     try {
       await post("http://localhost:5000/admin/products/create", formData);
@@ -166,6 +168,30 @@ function CreateProduct() {
             <option value="">-- Choose a Category --</option>
             {renderSelectTree(product_category_id)}
           </Form.Control>
+        </Form.Group>
+        {/* Status (Radio buttons) */}
+        <Form.Group>
+          <Form.Label>Featured:</Form.Label>
+          <div>
+            <Form.Check
+              type="radio"
+              id="statusFeatured"
+              label="Featured"
+              name="featured"
+              value="1"
+              checked={featured === "1" ? true : false}
+              onChange={() => setFeatured("1")}
+            />
+            <Form.Check
+              type="radio"
+              id="statusUnfeatured"
+              label="Unfeatured"
+              name="Unfeatured"
+              value="0"
+              checked={featured === "0" ? true : false}
+              onChange={() => setFeatured("0")}
+            />
+          </div>
         </Form.Group>
 
         {/* Status (Radio buttons) */}

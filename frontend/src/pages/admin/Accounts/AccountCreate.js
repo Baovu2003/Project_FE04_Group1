@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import Notification from "../../../Helpers/Notification ";
-import { post, postV2 } from "../../../Helpers/API.helper";
+import { get, post, postV2 } from "../../../Helpers/API.helper";
 
 
 function AccountCreate() {
@@ -29,8 +29,7 @@ function AccountCreate() {
 
   const fetchRoles = async () => {
     try {
-      const response = await fetch("http://localhost:5000/admin/roles");
-      const data = await response.json();
+      const data = await get("http://localhost:5000/admin/roles");
       setRoles(data.records);
     } catch (error) {
       console.error("Error fetching roles:", error);
@@ -39,14 +38,15 @@ function AccountCreate() {
 
   const fetchAccounts = async () => {
     try {
-      const response = await fetch("http://localhost:5000/admin/accounts");
-      const data = await response.json();
+      const data = await get("http://localhost:5000/admin/accounts");
       setAccounts(data.records); // Store account list in state
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
   };
 
+  console.log(accounts)
+  console.log(roles)
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex for validating email
     if (!email) return "Please input your E-mail!";
@@ -146,7 +146,7 @@ function AccountCreate() {
     <>
       <div>
         <h1>Create Account</h1>
-        <Notification message={message} type={type} />
+        {/* <Notification message={message} type={type} /> */}
         {roles.length > 0 ? (
           <Form onSubmit={handleSubmit}>
             {/* Full Name */}

@@ -16,48 +16,37 @@ module.exports.index = async (req, res) => {
   });
 };
 
-module.exports.create = async (req, res) => {
-  console.log(req.body);
-  let find = {
-    deleted: false,
-  };
-  const records = await ProductCategory.find(find);
-  console.log(records);
-
-  const newRecords = createTreeHelper.tree(
-    records.map((record) => record.toObject({ virtuals: true }))
-  );
-  console.log(newRecords);
-  res.json("admin/pages/products-category/create.pug", {
-    pageTitle: "Thêm mới danh mục sản phẩm",
-    records: records,
-  });
-};
-
 module.exports.createUsePost = async (req, res) => {
-  console.log("req.body:", req.body);
-  console.log(req.file);
-  // Cài đặt vị trí nếu chưa được cung cấp
-  if (req.body.position === "") {
-    const x = await ProductCategory.countDocuments();
-    req.body.position = x + 1; // Tự động tăng vị trí
+  console.log(res.locals.role.permission);
+  const permission = res.locals.role.permission;
+  if (permission.includes("products-category_create")) {
+    // Cài đặt vị trí nếu chưa được cung cấp
+    if (req.body.position === "") {
+      const x = await ProductCategory.countDocuments();
+      req.body.position = x + 1; // Tự động tăng vị trí
+    } else {
+      req.body.position = Number(req.body.position);
+    }
+
+    // Xử lý thumbnail
+    if (req.file) {
+      // Đường dẫn đến file đã upload
+      req.body.thumbnail = `/uploads/${req.file.filename}`; // Lưu trữ đường dẫn vào req.body
+    }
+
+    // Tạo danh mục
+    // const category = new ProductCategory(req.body);
+    // console.log(category);
+
+    // await category.save();
+    req.flash("success", "Create products successfully");
+    res.redirect(`${systemconfig.prefixAdmin}/products-category`);
   } else {
-    req.body.position = Number(req.body.position);
+    res.json({
+      message: "Error"
+    })
+    return 
   }
-
-  // Xử lý thumbnail
-  if (req.file) {
-    // Đường dẫn đến file đã upload
-    req.body.thumbnail = `/uploads/${req.file.filename}`; // Lưu trữ đường dẫn vào req.body
-  }
-
-  // Tạo danh mục
-  const category = new ProductCategory(req.body);
-  console.log(category);
-
-  await category.save();
-  req.flash("success", "Create products successfully");
-  res.redirect(`${systemconfig.prefixAdmin}/products-category`);
 };
 
 module.exports.changeStatus = async (req, res) => {

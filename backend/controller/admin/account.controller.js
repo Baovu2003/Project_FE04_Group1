@@ -2,7 +2,6 @@ const md5 = require('md5');
 const Account = require("../../models/account.model")
 
 module.exports.index = async (req,res) =>{
-
     const records = await Account.find();
     res.json({
         records: records

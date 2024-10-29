@@ -9,7 +9,6 @@ const controller = require("../../controller/admin/product-category.controller")
 const validate = require("../../validate/admin/productvalidate");
 
 router.get("/", controller.index);
-router.get("/create", controller.create);
 
 router.post(
   "/create",

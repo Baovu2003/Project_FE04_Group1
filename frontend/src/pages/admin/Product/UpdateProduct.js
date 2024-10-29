@@ -13,6 +13,7 @@ function UpdateProduct() {
     thumbnail: "",
     position: 0,
     status: "active",
+    featured: "1",
     product_category_id: "",
   });
   const [categories, setCategories] = useState([]); // Assuming you have categories to select
@@ -36,6 +37,7 @@ function UpdateProduct() {
     fetchProductDetails();
   }, [id]);
 
+  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -49,6 +51,7 @@ function UpdateProduct() {
 
     fetchCategories();
   }, []);
+  console.log(product)
   const renderSelectTree = (records, level = 0) => {
     return records.map((item) => {
       const prefix = Array(level + 1).join("-- ");
@@ -112,7 +115,8 @@ function UpdateProduct() {
         </div>
       )}
       <h1>Update Product</h1>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
+      {product ? <>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
         {/* Title */}
         <div className="form-group mb-3">
           <label htmlFor="title">Tiêu đề</label>
@@ -252,6 +256,41 @@ function UpdateProduct() {
             }
           />
         </div>
+        <div className="form-group mb-3">
+          <label>Featured:</label>
+          <div className="form-check form-check-inline">
+            <input
+              type="radio"
+              className="form-check-input"
+              id="statusFeatured"
+              name="Featured"
+              value="1"
+              checked={product.featured === "1"}
+              onChange={(e) =>
+                setProduct({ ...product, featured: e.target.value })
+              }
+            />
+            <label htmlFor="statusFeatured" className="form-check-label">
+            Featured
+            </label>
+          </div>
+          <div className="form-check form-check-inline">
+            <input
+              type="radio"
+              className="form-check-input"
+              id="statusInActive"
+              name="Uneatured"
+              value="0"
+              checked={product.featured === "0"}
+              onChange={(e) =>
+                setProduct({ ...product, featured: e.target.value })
+              }
+            />
+            <label htmlFor="statusInActive" className="form-check-label">
+            Unfeatured
+            </label>
+          </div>
+        </div>
 
         {/* Status (Radio buttons) */}
         <div className="form-group mb-3">
@@ -297,10 +336,15 @@ function UpdateProduct() {
           </button>
         </div>
       </form>
+      </> : <>
+
+    <div>  Not found</div>
+      </>}
       <Link to="/admin/products" className="btn btn-secondary mt-3">
         Quay lại
       </Link>
     </div>
+    
   );
 }
 

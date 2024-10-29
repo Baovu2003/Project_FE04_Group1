@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { get } from '../../../Helpers/API.helper';
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { get } from "../../../Helpers/API.helper";
 
 function DetailProduct() {
   const { id } = useParams(); // Get the product ID from the URL
-  console.log({id})
+  console.log({ id });
   const [product, setProduct] = useState(null);
+  const [accounts, setAccounts] = useState([]); // State để lưu danh sách tài khoản
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -13,7 +14,9 @@ function DetailProduct() {
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        const data = await get(`http://localhost:5000/admin/products/detail/${id}`);    
+        const data = await get(
+          `http://localhost:5000/admin/products/detail/${id}`
+        );
         setProduct(data.product);
         setLoading(false);
       } catch (error) {
@@ -24,6 +27,40 @@ function DetailProduct() {
 
     fetchProductDetails();
   }, [id]); // Dependency array includes id to refetch if it changes
+
+  useEffect(() => {
+    const fetchProductDetails = async () => {
+      try {
+        const data = await get(
+          `http://localhost:5000/admin/products/detail/${id}`
+        );
+        setProduct(data.product);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchProductDetails();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const data = await get("http://localhost:5000/admin/accounts");
+
+        console.log(data);
+        setAccounts(data.records);
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAccounts();
+  }, []);
 
   // Handle loading state
   if (loading) {
@@ -40,6 +77,13 @@ function DetailProduct() {
     return <div>No product found</div>;
   }
 
+  const getAccountNameById = (accountId) => {
+    const account = accounts.find((acc) => acc._id === accountId);
+    return account ? account.fullName : "Not found";
+  };
+  console.log(product);
+  console.log(accounts);
+
   // Render the product details
   return (
     <div className="container mt-5">
@@ -49,18 +93,38 @@ function DetailProduct() {
           <h1>Detail sản phẩm</h1>
         </div>
       </div>
-      
+
       <div className="row">
         {/* Product Thumbnail */}
         <div className="col-md-6">
           <div className="card">
-            <img src={product.thumbnail} alt="Product Image" className="card-img-top img-fluid" />
+            <div
+              className="d-flex justify-content-center align-items-center mt-3"
+              style={{ height: "400px" }}
+            >
+              <img
+                src={
+                  product.thumbnail
+                    ? product.thumbnail.startsWith("http")
+                      ? product.thumbnail
+                      : `http://localhost:5000${product.thumbnail}`
+                    : "http://localhost:5000/path-to-placeholder-image.png" // Placeholder image URL
+                }
+                alt={product.title || "Placeholder Image"}
+                className="img-fluid" // Use Bootstrap class for responsiveness
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  borderRadius: "10px",
+                }} // Ensures the image does not exceed the card dimensions
+              />
+            </div>
             <div className="card-body text-center">
               <h5 className="card-title">Ảnh sản phẩm</h5>
             </div>
           </div>
         </div>
-        
+
         {/* Product Information */}
         <div className="col-md-6">
           <div className="card">
@@ -104,11 +168,34 @@ function DetailProduct() {
               {/* Status */}
               <div className="mb-3">
                 <label className="fw-bold">Trạng thái:</label>
-                <p>{product.status === "active" ? "Hoạt động" : "Dừng hoạt động"}</p>
+                <p>
+                  {product.status === "active" ? "Hoạt động" : "Dừng hoạt động"}
+                </p>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      {/* Updated By Accounts List */}
+      <div style={{ border: "3px solid", marginTop: "10px", padding: "10px" }}>
+        <h5>Cập nhật bởi:</h5>
+        <ul>
+          {product.updatedBy.map((item) => (
+            <li key={item._id}>
+              {getAccountNameById(item.account_id)} - Time:{" "}
+              {new Date(item.updatedAt).toLocaleString("vi-VN")}
+              {/* Displaying changes */}
+              <ul>
+                {item.changes && Object.keys(item.changes).map((key) => (
+                  <li key={key}>
+                    {key}: From "{item.changes[key].from}" To "
+                    {item.changes[key].to}"
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* Back Button */}

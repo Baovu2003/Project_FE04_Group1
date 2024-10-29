@@ -61,11 +61,9 @@ function CreateCategory() {
     console.log("categoryData", formData);
 
     try {
-        await fetch('http://localhost:5000/admin/products-category/create', {
-            method: 'POST',
-            body: formData,
-        });
-        navigate('/admin/products-category');
+        await post('http://localhost:5000/admin/products-category/create',formData,
+        );
+        // navigate('/admin/products-category');
     } catch (error) {
         console.error('Error creating category:', error);
     }

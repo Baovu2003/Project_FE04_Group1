@@ -10,15 +10,30 @@
     height: 2px;
     background-color: #ccc;
 }
-
 .bao-subheadline-label {
     text-transform: uppercase;
     margin: 0 1rem;
     letter-spacing: 0.15em;
-    font-weight: 500;
-    font-size: 14px;
+    font-weight: bold;
+    font-size: 20px;
     color: #555;
+ 
+    animation: fadeInOut 1s ease-in-out infinite; /* Animation lặp lại vô hạn */
 }
+
+/* Định nghĩa keyframes cho hiệu ứng fadeInOut */
+@keyframes fadeInOut {
+    0%, 100% {
+      
+        transform: translateY(-5px); /* Dịch chuyển lên trên */
+    }
+    50% {
+    
+        transform: translateY(0); /* Trở về vị trí ban đầu */
+    }
+}
+
+
 
 .bao-product-cart {
     text-align: center;
@@ -43,29 +58,60 @@
     transition: opacity 0.3s ease-in-out;
 }
 
-.product-image:hover .product-overlay {
+.product-overlay {
     opacity: 1;
 }
 
-.explore-button {
-    display: none;
-    width: 90%;
-    margin-bottom: 1rem;
-}
 
-.product-image:hover .explore-button {
-    display: block;
-}
 
 .on-sale-badge {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #fff;
-    color: #d2691e;
+    top: 0px;
+    right: 0px;
+    background: green;
+    color: white;
     padding: 0.5rem 1rem;
     font-weight: 600;
-    border-radius: 4px;
+    border-radius: 9px;
+    opacity: 0;
+    transform: translateX(-100%); /* Di chuyển nút ra ngoài màn hình bên trái */
+    animation: slideInBadge 5s forwards ease-in-out infinite; /* Animation cho nút */
+}
+
+@keyframes slideInBadge {
+    0% {
+        opacity: 0.7;
+        transform: translateX(-100%); /* Bắt đầu từ bên ngoài màn hình */
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0); /* Di chuyển về vị trí ban đầu */
+    }
+}
+
+.explore-button {
+    width: 70%;
+    padding: 10px;
+    margin-bottom: 0.5rem;
+    color: white; 
+    background-color:#ed9e66; 
+    border: none; 
+    border-radius: 10px;
+    font-weight: bold;
+}
+.cart-button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 0.5rem;
+    color: white; 
+    background-color: orange; 
+    border: none; 
+    border-radius: 10px;
+    font-weight: bold;
 }
 
 .product-info {
@@ -76,6 +122,9 @@
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     transition: box-shadow 0.3s;
+    text-decoration: none;
+}
+.product-info a{
     text-decoration: none;
 }
 
@@ -89,7 +138,12 @@
     color: #333;
     margin-bottom: 0.5rem;
     transition: color 0.3s;
+    height: 1.5em; /* Fixed height */
+    overflow: hidden; /* Hide overflow content */
+    text-overflow: ellipsis; /* Show ellipsis when text is too long */
+    white-space: nowrap; /* Prevent text from wrapping */
 }
+
 
 .product-title:hover {
     color: #d2691e;

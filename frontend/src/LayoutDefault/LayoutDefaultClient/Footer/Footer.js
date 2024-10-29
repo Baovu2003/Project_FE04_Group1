@@ -84,7 +84,7 @@ function Footer() {
             <Col lg={12}>
               <div className="copyright text-center">
                 <span className="copyright-text">
-                  © 2024 PROJECT by CPL_HN_FE04_Group2
+                  © 2024 PROJECT by CPL_HN_FE04_Group1
                 </span>
               </div>
             </Col>

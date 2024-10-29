@@ -27,11 +27,15 @@ import AccountList from "./pages/admin/Accounts/AccountList";
 import AccountCreate from "./pages/admin/Accounts/AccountCreate";
 import Login from "./pages/admin/Auth/Login/Login";
 import ProtectedRoute from "./pages/admin/ProtectedRoute/ProtectedRoute ";
+import ProductDetail from "./pages/client/ProductDetail/ProductDetail";
+import Cart from "./pages/client/Cart/Cart";
+import Register from "./pages/client/User/Register";
+import LoginUser from "./pages/client/User/LoginUser";
 
 function App() {
   return (
     // <>
-    //   <Counter/>
+    //   Hello
     // </>
 
     <Router>
@@ -39,8 +43,12 @@ function App() {
         <Route path="/" element={<LayoutDefault />}>
           <Route index element={<Home />} />
           <Route path="listProduct" element={<ListProduct />} />
+          <Route path="listProduct/detail/:slug" element={<ProductDetail />} />
           <Route path="contact" element={<Contact />} />
           <Route path="about" element={<About />} />
+          <Route path="cart" element={<Cart />} />
+          <Route path="/user/login" element={<LoginUser />} />
+          <Route path="/user/register" element={<Register />} />
           <Route path="*" element={<NotFoundClient />} />
         </Route>
 
@@ -57,7 +65,7 @@ function App() {
               <Route index element={<Product />} />
               <Route path="create" element={<Createproduct />} />
               <Route path="detail/:id" element={<DetailProduct />} />
-              <Route path="edit/:id" element={<UpdateProduct />} />{" "}
+              <Route path="edit/:id" element={<UpdateProduct />} />
             </Route>
 
             <Route path="roles" element={<RoleGroup />}>

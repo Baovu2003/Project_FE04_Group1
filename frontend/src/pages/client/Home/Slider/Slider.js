@@ -1,9 +1,9 @@
-import React from 'react'
-import "./Slider.css"
+import React from "react";
+import "./Slider.css";
 function Slider() {
   return (
     <>
-         <div className="slider">
+      <div className="slider">
         <div className="overlay">
           <div className="slider-content">
             <div className="subtitle">Best place to buy Coffee</div>
@@ -19,7 +19,7 @@ function Slider() {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default Slider
+export default Slider;

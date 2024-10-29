@@ -48,7 +48,7 @@ function ProductList() {
     try {
       const data = await get("http://localhost:5000/admin/products"); // Directly get the parsed data
       console.log(data);
-  
+
       // Assuming the structure of your response is similar to axios
       setProducts(data.products);
       setFilteredProducts(data.products); // Set filtered products to the entire list initially
@@ -183,7 +183,7 @@ function ProductList() {
         `http://localhost:5000/admin/products/delete/${productIdToDelete}`
       );
       fetchProducts();
-      setNotification("Sản phẩm đã bị xóa.");
+      setNotification("Success");
       setTimeout(() => setNotification(""), 3000);
     } catch (error) {
       console.error("Error deleting product:", error);
@@ -195,258 +195,289 @@ function ProductList() {
   console.log({ filterStatus, searchKeyword, sortOrder, filterDeleted });
   return (
     <Container className="my-4">
-    
       {notification && (
         <div className={`notification notification-info`} role="alert">
           {notification}
         </div>
       )}
 
-      {account.role.permission.includes("products_view") &&<>
-        <h1 className="text-center mb-4">Danh sách sản phẩm</h1>
-        <Row className="mb-3">
-        <Col>
-          <form className="d-flex align-items-start">
-            <div className="form-group me-2">
-              <select
-                name="type"
-                className="form-select"
-                // value={bulkAction}
+      {account.role.permission.includes("products_view") && (
+        <>
+          <h1 className="text-center mb-4">Danh sách sản phẩm</h1>
+          <Row className="mb-3">
+            <Col>
+              <form className="d-flex align-items-start">
+                <div className="form-group me-2">
+                  <select
+                    name="type"
+                    className="form-select"
+                    // value={bulkAction}
+                  >
+                    <option value="active">Activate</option>
+                    <option value="inactive">InActive</option>
+                    <option value="deleteAll">Delete</option>
+                    <option value="change-position">Change Position</option>
+                  </select>
+                </div>
+                <button type="submit" className="btn btn-primary">
+                  Apply
+                </button>
+              </form>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col>
+              <InputGroup>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter keyword"
+                  value={searchKeyword}
+                  onChange={handleSearchChange}
+                />
+              </InputGroup>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Select value={filterStatus} onChange={handleFilterChange}>
+                <option value="all">All</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </Form.Select>
+            </Col>
+            <Col md={6}>
+              <Form.Select
+                value={filterDeleted}
+                onChange={handleDeletedFilterChange}
               >
-                <option value="active">Activate</option>
-                <option value="inactive">InActive</option>
-                <option value="deleteAll">Delete</option>
-                <option value="change-position">Change Position</option>
-              </select>
-            </div>
-            <button type="submit" className="btn btn-primary">
-              Apply
-            </button>
-          </form>
-        </Col>
-      </Row>
-      <Row className="mb-3">
-        <Col>
-          <InputGroup>
-            <Form.Control
-              type="text"
-              placeholder="Enter keyword"
-              value={searchKeyword}
-              onChange={handleSearchChange}
-            />
-          </InputGroup>
-        </Col>
-      </Row>
-      <Row className="mb-3">
-        <Col md={6}>
-          <Form.Select value={filterStatus} onChange={handleFilterChange}>
-            <option value="all">All</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </Form.Select>
-        </Col>
-        <Col md={6}>
-          <Form.Select
-            value={filterDeleted}
-            onChange={handleDeletedFilterChange}
-          >
-            <option value="all">All</option>
-            <option value="deleted">Deleted</option>
-            <option value="undeleted">Undeleted</option>
-          </Form.Select>
-        </Col>
-      </Row>
-      {/* Create Product */}
-      <Row className="mb-3">
-        {/* Phần sort */}
-        <Col md={8}>
-          <Form.Select value={sortOrder} onChange={handleSortChange}>
-            <option value="">Default</option>
-            <option value="position-desc">Vị trí giảm dần</option>
-            <option value="position-asc">Vị trí tăng dần</option>
-            <option value="price-desc">Giá giảm dần</option>
-            <option value="price-asc">Giá tăng dần</option>
-            <option value="title-asc">Title A-Z</option>
-            <option value="title-desc">Title Z-A</option>
-          </Form.Select>
-        </Col>
-        {account.role.permission.includes("products_view") &&<>
-          <Col md={4}>
-          <Link to="/admin/products/create" className="btn btn-success">
-            Create Product
-          </Link>
-        </Col>
-        </>}
-       
-      </Row>
+                <option value="all">All</option>
+                <option value="deleted">Deleted</option>
+                <option value="undeleted">Undeleted</option>
+              </Form.Select>
+            </Col>
+          </Row>
+          {/* Create Product */}
+          <Row className="mb-3">
+            {/* Phần sort */}
+            <Col md={8}>
+              <Form.Select value={sortOrder} onChange={handleSortChange}>
+                <option value="">Default</option>
+                <option value="position-desc">Vị trí giảm dần</option>
+                <option value="position-asc">Vị trí tăng dần</option>
+                <option value="price-desc">Giá giảm dần</option>
+                <option value="price-asc">Giá tăng dần</option>
+                <option value="title-asc">Title A-Z</option>
+                <option value="title-desc">Title Z-A</option>
+              </Form.Select>
+            </Col>
+            {account.role.permission.includes("products_view") && (
+              <>
+                <Col md={4}>
+                  <Link to="/admin/products/create" className="btn btn-success">
+                    Create Product
+                  </Link>
+                </Col>
+              </>
+            )}
+          </Row>
 
-      {/* Vẽ product ra giao diện */}
-      {currentProducts.length > 0 ? (
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>
-                <input type="checkbox" name="checkall" />
-              </th>
-              <th>STT</th>
-              <th>Hình ảnh</th>
-              <th>Sản phẩm</th>
-              <th>Giá</th>
-              <th>Position</th>
-              <th>Trạng thái</th>
-              <th>IsDeleted</th>
-              <th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentProducts &&
-              currentProducts.map((product, index) => (
-                <tr key={product._id}>
-                  <td>
-                    <input type="checkbox" name="id" value={product._id} />
-                  </td>
-                  <td>{startIndex + index + 1}</td>
-                  <td>
-                    <img
-                      src={
-                        product.thumbnail
-                          ? product.thumbnail.startsWith("http")
-                            ? product.thumbnail
-                            : `http://localhost:5000${product.thumbnail}`
-                          : "http://localhost:5000/path-to-placeholder-image.png" // Placeholder image URL
-                      }
-                      alt={product.title || "Placeholder Image"}
-                      width="100px"
-                      height="auto"
-                    />
-                  </td>
-
-                  <td>{product.title}</td>
-                  <td>{product.price}$</td>
-                  <td>{product.position}</td>
-                  <td>
-                    {account.role.permission.includes("products_update") &&<>
-                      <Button
-                      variant={
-                        product.status === "active" ? "success" : "danger"
-                      }
-                      onClick={() =>
-                        handleStatusChange(product._id, product.status)
-                      } // Call handler on click
-                    >
-                      {product.status === "active" ? "Active" : "Inactive"}
-                    </Button>
-                    </>}
-                    
-                  </td>
-                  <td>
-                    {/* Hiển thị trạng thái đã xóa */}
-                    {product.deleted ? (
-                      <h6 className="text-danger">Đã xóa</h6>
-                    ) : (
-                      <h6 className="text-success">Chưa xóa</h6>
-                    )}
-                  </td>
-
-                  <td>
-                    <Link
-                      to={`detail/${product._id}`}
-                      className="btn btn-primary me-2"
-                    >
-                      Detail
-                    </Link>
-                    {account.role.permission.includes("products_update") && <>
-                      <Link
-                      to={`edit/${product._id}`}
-                      className="btn btn-warning me-2"
-                    >
-                      Update
-                    </Link>
-                    </>}
-                    
-                      {account.role.permission.includes("products_delete") && <>
-                        <Button
-                      variant={product.deleted ? "success" : "danger"}
-                      onClick={() => handleDelete(product._id)}
-                      className="ms-2"
-                    >
-                      {product.deleted ? "Undeleted" : "Deleted"}
-                    </Button>
-                      </>}
-                    
-                  </td>
+          {/* Vẽ product ra giao diện */}
+          {currentProducts.length > 0 ? (
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>
+                    <input type="checkbox" name="checkall" />
+                  </th>
+                  <th>STT</th>
+                  <th>Hình ảnh</th>
+                  <th>Sản phẩm</th>
+                  <th>Giá</th>
+                  <th>Position</th>
+                  <th>Created by</th>
+                  <th>Trạng thái</th>
+                  <th>IsDeleted</th>
+                  <th>Hành động</th>
                 </tr>
+              </thead>
+              <tbody>
+                {currentProducts &&
+                  currentProducts.map((product, index) => (
+                    <tr key={product._id}>
+                      <td>
+                        <input type="checkbox" name="id" value={product._id} />
+                      </td>
+                      <td>{startIndex + index + 1}</td>
+                      <td>
+                        <img
+                          src={
+                            product.thumbnail
+                              ? product.thumbnail.startsWith("http")
+                                ? product.thumbnail
+                                : `http://localhost:5000${product.thumbnail}`
+                              : "http://localhost:5000/path-to-placeholder-image.png" // Placeholder image URL
+                          }
+                          alt={product.title || "Placeholder Image"}
+                          width="100px"
+                          height="auto"
+                        />
+                      </td>
+
+                      <td>{product.title}</td>
+                      <td>{product.price}$</td>
+                      <td>{product.position}</td>
+                      <td>
+                        {product.accountFullName}
+                        <br></br>
+                        {product.createdBy.createdAt &&
+                          new Date(product.createdBy.createdAt).toLocaleString(
+                            "vi-VN"
+                          )}
+                      </td>
+
+                      <td>
+                        {account.role.permission.includes(
+                          "products_update"
+                        ) && (
+                          <>
+                            <Button
+                              variant={
+                                product.status === "active"
+                                  ? "success"
+                                  : "danger"
+                              }
+                              onClick={() =>
+                                handleStatusChange(product._id, product.status)
+                              } // Call handler on click
+                            >
+                              {product.status === "active"
+                                ? "Active"
+                                : "Inactive"}
+                            </Button>
+                          </>
+                        )}
+                      </td>
+                      <td>
+                        {/* Hiển thị trạng thái đã xóa */}
+                        {product.deleted ? (
+                          <h6 className="text-danger">Đã xóa</h6>
+                        ) : (
+                          <h6 className="text-success">Chưa xóa</h6>
+                        )}
+                      </td>
+
+                      <td>
+                        <Link
+                          to={`detail/${product._id}`}
+                          className={`btn btn-primary me-2 ${
+                            product.deleted ? "disabled" : ""
+                          }`}
+                          tabIndex={product.deleted ? -1 : 0} // Ngăn chặn việc focus vào nút
+                          aria-disabled={product.deleted} // Cung cấp thông tin truy cập cho người dùng
+                        >
+                          Detail
+                        </Link>
+                        {account.role.permission.includes(
+                          "products_update"
+                        ) && (
+                          <Link
+                            to={`edit/${product._id}`}
+                            className={`btn btn-warning me-2 ${
+                              product.deleted ? "disabled" : ""
+                            }`}
+                            tabIndex={product.deleted ? -1 : 0} // Ngăn chặn việc focus vào nút
+                            aria-disabled={product.deleted} // Cung cấp thông tin truy cập cho người dùng
+                          >
+                            Update
+                          </Link>
+                        )}
+
+                        {account.role.permission.includes(
+                          "products_delete"
+                        ) && (
+                          <Button
+                            variant={product.deleted ? "success" : "danger"}
+                            onClick={() => handleDelete(product._id)}
+                            className="ms-2"                           
+                          >
+                            {product.deleted ? "Undelete" : "Delete"}
+                          </Button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </Table>
+          ) : (
+            <p>Not found</p>
+          )}
+
+          {/* Pagination Controls */}
+          <nav>
+            <ul className="pagination justify-content-center">
+              {currentPage > 1 && (
+                <>
+                  <li className="page-item">
+                    <button
+                      className="page-link"
+                      onClick={() => handlePageChange(1)}
+                    >
+                      Trang đầu
+                    </button>
+                  </li>
+                  <li className="page-item">
+                    <button
+                      className="page-link"
+                      onClick={() => handlePageChange(currentPage - 1)}
+                    >
+                      Trang trước
+                    </button>
+                  </li>
+                </>
+              )}
+
+              {Array.from({ length: totalPages }, (_, i) => (
+                <li
+                  key={i + 1}
+                  className={`page-item ${
+                    currentPage === i + 1 ? "active" : ""
+                  }`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => handlePageChange(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                </li>
               ))}
-          </tbody>
-        </Table>
-      ) : (
-        <p>Not found</p>
+
+              {currentPage < totalPages && (
+                <>
+                  <li className="page-item">
+                    <button
+                      className="page-link"
+                      onClick={() => handlePageChange(currentPage + 1)}
+                    >
+                      Trang sau
+                    </button>
+                  </li>
+                  <li className="page-item">
+                    <button
+                      className="page-link"
+                      onClick={() => handlePageChange(totalPages)}
+                    >
+                      Trang cuối
+                    </button>
+                  </li>
+                </>
+              )}
+            </ul>
+          </nav>
+        </>
       )}
 
-      {/* Pagination Controls */}
-      <nav>
-        <ul className="pagination justify-content-center">
-          {currentPage > 1 && (
-            <>
-              <li className="page-item">
-                <button
-                  className="page-link"
-                  onClick={() => handlePageChange(1)}
-                >
-                  Trang đầu
-                </button>
-              </li>
-              <li className="page-item">
-                <button
-                  className="page-link"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                >
-                  Trang trước
-                </button>
-              </li>
-            </>
-          )}
-
-          {Array.from({ length: totalPages }, (_, i) => (
-            <li
-              key={i + 1}
-              className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
-            >
-              <button
-                className="page-link"
-                onClick={() => handlePageChange(i + 1)}
-              >
-                {i + 1}
-              </button>
-            </li>
-          ))}
-
-          {currentPage < totalPages && (
-            <>
-              <li className="page-item">
-                <button
-                  className="page-link"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                >
-                  Trang sau
-                </button>
-              </li>
-              <li className="page-item">
-                <button
-                  className="page-link"
-                  onClick={() => handlePageChange(totalPages)}
-                >
-                  Trang cuối
-                </button>
-              </li>
-            </>
-          )}
-        </ul>
-      </nav>
-      </>}
-
       {/* Bulk Action Form */}
-
 
       <Modal
         isOpen={isModalOpen}

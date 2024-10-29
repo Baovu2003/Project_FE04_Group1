@@ -16,6 +16,7 @@ export const get = async (url) => {
     throw new Error(errorMsg); // Throw error with a readable message
   }
 };
+
 export const post = async (url, values) => {
   console.log("url", url);
   console.log("values", values);
